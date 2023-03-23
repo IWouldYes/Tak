@@ -1,15 +1,12 @@
-﻿
-
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 
 namespace ConsoleApp9
 {
     internal class Program
     {
-
+        
         static void register()
         {
-
             string fName, lName, phoneNumber, description, country, city, street;
             Console.Write("First name:");
             fName = Console.ReadLine();
@@ -48,10 +45,62 @@ namespace ConsoleApp9
         }
 
 
+        static int cantThinkOfANameRn(string[] text)
+        {
+            
+                Console.Clear();
+                int pos = 0;
+                int txtsum;
+                int spcnum = 0;
+            while (true)
+            {
+
+                for (int i = 0; i < text.Length; i++)
+                {
+                    Console.Write(text[i]);
+                    Console.Write(" ");
+                }
+                Console.WriteLine(pos);
+                for (int i = 0; i < pos; i++)
+                {
+                    spcnum += text[i].Length + 1;
+                }
+                Console.WriteLine(spcnum);
+
+                for (int i = 0; i < spcnum; i++)
+                {
+                    Console.Write(" ");
+                }
+                Console.WriteLine("^");
+
+
+                switch (Console.ReadKey().Key)
+                {
+                    case ConsoleKey.RightArrow:
+                        pos++;
+                        break;
+                    case ConsoleKey.LeftArrow:
+                        pos--;
+                        break;
+                    case ConsoleKey.Enter:
+                        Console.Clear();
+                        return pos;
+                        Thread.Sleep(5000);
+                        Console.Clear();
+                        break;
+                }
+            }
+        }
+
+
         static void Main(string[] args)
         {
-            register();
+            Boolean isLoggedIn;
 
+            string[] tekst = new string[] { "option1", "option2", "option3" };
+            register();
+            cantThinkOfANameRn(tekst);
+            
 
 
         }
