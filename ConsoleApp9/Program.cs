@@ -4,7 +4,7 @@ namespace ConsoleApp9
 {
     internal class Program
     {
-        
+
         static void register()
         {
             string fName, lName, password, phoneNumber, description, country, city, street;
@@ -40,21 +40,46 @@ namespace ConsoleApp9
             conn.Close();
 
         }
-
+        //Tu nad loginem popracowac
         static void login()
         {
+            string fName, password;
+            Console.Write("First name:");
+            fName = Console.ReadLine();
+            Console.Write("Password:");
+            password = Console.ReadLine();
 
+            SqlConnection conn = new SqlConnection("workstation id=application.mssql.somee.com;packet size=4096;user id=app_SQLLogin_1;pwd=yespassword;data source=application.mssql.somee.com;persist security info=False;initial catalog=application");
+            conn.Open();
+
+            SqlCommand login;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            string sql = string.Format("select id from [user] where first_name = '{0}' AND password = '{1}'", fName, password);
+            login = new SqlCommand(sql, conn);
+            adapter.InsertCommand = new SqlCommand(sql, conn);
+            adapter.InsertCommand.ExecuteNonQuery();
+            conn.Close();
         }
 
+        static void search()
+        {
+            Console.Write("search:");
+        }
+
+        static void addListing()
+        {
+            Console.WriteLine("newListing");
+        }
 
         static int cantThinkOfANameRn(string[] text)
         {
             
-                Console.Clear();
+                
                 int pos = 0;
                 int txtsum;
             while (true)
             {
+                Console.Clear();
                 int spcnum = 0;
 
                 for (int i = 0; i < text.Length; i++)
@@ -99,11 +124,42 @@ namespace ConsoleApp9
 
         static void Main(string[] args)
         {
-            Boolean isLoggedIn;
+            Boolean isLoggedIn = false;
+            int userid;
+            string[] myAcc = new string[] { "Login", "Register" };
+            string[] hub = new string[] { "Search", "My account", "Add listing" };
+            switch (cantThinkOfANameRn(hub))
+            {
+                case 0:
+                    search();
+                    break;
 
-            string[] tekst = new string[] { "option1", "option2", "option3", "option4" };
-            register();
-            Console.Write(cantThinkOfANameRn(tekst));
+                case 1:
+                    if (cantThinkOfANameRn(myAcc) == 0)
+                        login();
+                    else
+                        register();
+                    isLoggedIn = true;
+                    break;
+
+                case 2:
+                    if (isLoggedIn)
+                        addListing();
+                    else
+                    {
+                        Console.WriteLine("You need to create a new account first or login");
+
+
+                        if (cantThinkOfANameRn(myAcc) == 0)
+                            login();
+                        else
+                            register();
+                        isLoggedIn = true;
+                       
+
+                    }
+                    break;
+            }
             
 
 
