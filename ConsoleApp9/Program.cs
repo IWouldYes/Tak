@@ -7,11 +7,13 @@ namespace ConsoleApp9
         
         static void register()
         {
-            string fName, lName, phoneNumber, description, country, city, street;
+            string fName, lName, password, phoneNumber, description, country, city, street;
             Console.Write("First name:");
             fName = Console.ReadLine();
             Console.Write("Last name:");
             lName = Console.ReadLine();
+            Console.Write("Password:");
+            password = Console.ReadLine();
             Console.Write("Phone number:");
             phoneNumber = Console.ReadLine();
             Console.Write("Description(not required so you can leave empty):");
@@ -31,7 +33,7 @@ namespace ConsoleApp9
 
             SqlCommand register;
             SqlDataAdapter adapter = new SqlDataAdapter();
-            string sql = string.Format("insert into[user](first_name, last_name, phone_number, description, country, city, street)values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}');", fName, lName, phoneNumber, description, country, city, street);
+            string sql = string.Format("insert into[user](first_name, last_name, password, phone_number, description, country, city, street)values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');", fName, lName, password, phoneNumber, description, country, city, street);
             register = new SqlCommand(sql, conn);
             adapter.InsertCommand = new SqlCommand(sql, conn);
             adapter.InsertCommand.ExecuteNonQuery();
@@ -51,9 +53,9 @@ namespace ConsoleApp9
                 Console.Clear();
                 int pos = 0;
                 int txtsum;
-                int spcnum = 0;
             while (true)
             {
+                int spcnum = 0;
 
                 for (int i = 0; i < text.Length; i++)
                 {
@@ -73,22 +75,24 @@ namespace ConsoleApp9
                 }
                 Console.WriteLine("^");
 
-
-                switch (Console.ReadKey().Key)
-                {
-                    case ConsoleKey.RightArrow:
-                        pos++;
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        pos--;
-                        break;
-                    case ConsoleKey.Enter:
-                        Console.Clear();
-                        return pos;
-                        Thread.Sleep(5000);
-                        Console.Clear();
-                        break;
-                }
+                if (pos>=text.Length)
+                    pos = 0;
+                else
+                    switch (Console.ReadKey().Key)
+                    {
+                        case ConsoleKey.RightArrow:
+                            pos++;
+                            break;
+                        case ConsoleKey.LeftArrow:
+                            pos--;
+                            break;
+                        case ConsoleKey.Enter:
+                            Console.Clear();
+                            return pos;
+                            Thread.Sleep(5000);
+                            Console.Clear();
+                            break;
+                    }
             }
         }
 
@@ -97,9 +101,9 @@ namespace ConsoleApp9
         {
             Boolean isLoggedIn;
 
-            string[] tekst = new string[] { "option1", "option2", "option3" };
+            string[] tekst = new string[] { "option1", "option2", "option3", "option4" };
             register();
-            cantThinkOfANameRn(tekst);
+            Console.Write(cantThinkOfANameRn(tekst));
             
 
 
