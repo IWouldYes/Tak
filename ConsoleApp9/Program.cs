@@ -7,12 +7,14 @@ namespace ConsoleApp9
 
         static void register()
         {
-            string fName, lName, password, phoneNumber, description, country, city, street;
+            string login, fName, lName, password, phoneNumber, description, country, city, street;
+            Console.Write("Login:");
+            login = Console.ReadLine();
             Console.Write("First name:");
-            fName = Console.ReadLine();
-            Console.Write("Last name:");
             lName = Console.ReadLine();
             Console.Write("Password:");
+            fName = Console.ReadLine();
+            Console.Write("Last name:");
             password = Console.ReadLine();
             Console.Write("Phone number:");
             phoneNumber = Console.ReadLine();
@@ -44,7 +46,7 @@ namespace ConsoleApp9
         static void login()
         {
             string fName, password;
-            Console.Write("First name:");
+            Console.Write("Login:");
             fName = Console.ReadLine();
             Console.Write("Password:");
             password = Console.ReadLine();
@@ -54,7 +56,7 @@ namespace ConsoleApp9
 
             SqlCommand login;
             SqlDataAdapter adapter = new SqlDataAdapter();
-            string sql = string.Format("select id from [user] where first_name = '{0}' AND password = '{1}'", fName, password);
+            string sql = string.Format("select id from [user] where first_name = '{0}' AND Login = '{1}'", fName, password);
             login = new SqlCommand(sql, conn);
             adapter.InsertCommand = new SqlCommand(sql, conn);
             adapter.InsertCommand.ExecuteNonQuery();
