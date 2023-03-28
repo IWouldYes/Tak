@@ -1,6 +1,7 @@
 
 create table [user](
 [id] int identity(1,1) constraint PK_user primary key
+,[login] varchar(30) not null
 ,[password] varchar(30) not null
 ,[first_name] varchar(MAX) NOT null
 ,[last_name] varchar(MAX) NOT null
