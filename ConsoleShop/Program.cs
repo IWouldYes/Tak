@@ -1,20 +1,52 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 
-namespace ConsoleApp9
+namespace ConsoleShop
 {
     internal class Program
     {
 
+
+
         static void register()
         {
-            string login, fName, lName, password, phoneNumber, description, country, city, street;
+            SqlConnection conn = new SqlConnection("workstation id=application.mssql.somee.com;packet size=4096;user id=app_SQLLogin_1;pwd=yespassword;data source=application.mssql.somee.com;persist security info=False;initial catalog=application");
+            conn.Open();
+
+            string loginn, fName, lName, password, phoneNumber, description, country, city, street;
             Console.Write("Login:");
-            login = Console.ReadLine();
+            loginn = Console.ReadLine();
+
+
+            SqlCommand islogin = new SqlCommand();
+            islogin.Connection = conn;
+            islogin.CommandText = string.Format("select count(*) from [user] where login = '{0}'", loginn);
+
+
+            //liczba kolumn
+            SqlDataReader reader2 = islogin.ExecuteReader();
+
+            if (reader2.HasRows)
+            {
+                while (reader2.Read())
+                {
+                    while ((int)reader2[0] > 0)
+                    {
+                        Console.WriteLine("login already taken, try again");
+                        Console.Write("Login:");
+                        loginn = Console.ReadLine();
+                    }
+
+                }
+            }
+            reader2.Close();
+
+
             Console.Write("First name:");
-            lName = Console.ReadLine();
-            Console.Write("Password:");
             fName = Console.ReadLine();
             Console.Write("Last name:");
+            lName = Console.ReadLine();
+            Console.Write("Password:");
             password = Console.ReadLine();
             Console.Write("Phone number:");
             phoneNumber = Console.ReadLine();
@@ -30,12 +62,11 @@ namespace ConsoleApp9
             city = city.ToLower();
             street = street.ToLower();
 
-            SqlConnection conn = new SqlConnection("workstation id=application.mssql.somee.com;packet size=4096;user id=app_SQLLogin_1;pwd=yespassword;data source=application.mssql.somee.com;persist security info=False;initial catalog=application");
-            conn.Open();
+
 
             SqlCommand register;
             SqlDataAdapter adapter = new SqlDataAdapter();
-            string sql = string.Format("insert into[user](first_name, last_name, password, phone_number, description, country, city, street)values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}');", fName, lName, password, phoneNumber, description, country, city, street);
+            string sql = string.Format("insert into[user](first_name, last_name, login, password, phone_number, description, country, city, street)values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}');", fName, lName, loginn, password, phoneNumber, description, country, city, street);
             register = new SqlCommand(sql, conn);
             adapter.InsertCommand = new SqlCommand(sql, conn);
             adapter.InsertCommand.ExecuteNonQuery();
@@ -45,22 +76,54 @@ namespace ConsoleApp9
         //Tu nad loginem popracowac
         static void login()
         {
-            string fName, password;
+            string loginn, password;
             Console.Write("Login:");
-            fName = Console.ReadLine();
+            loginn = Console.ReadLine();
             Console.Write("Password:");
             password = Console.ReadLine();
 
             SqlConnection conn = new SqlConnection("workstation id=application.mssql.somee.com;packet size=4096;user id=app_SQLLogin_1;pwd=yespassword;data source=application.mssql.somee.com;persist security info=False;initial catalog=application");
             conn.Open();
 
-            SqlCommand login;
-            SqlDataAdapter adapter = new SqlDataAdapter();
-            string sql = string.Format("select id from [user] where first_name = '{0}' AND Login = '{1}'", fName, password);
-            login = new SqlCommand(sql, conn);
-            adapter.InsertCommand = new SqlCommand(sql, conn);
-            adapter.InsertCommand.ExecuteNonQuery();
+
+
+            //selectowanie wszystkiego z wybranej tabeli i schemy
+            SqlCommand login = new SqlCommand();
+            login.Connection = conn;
+            login.CommandText = string.Format("select id from [user] where login = '{0}' AND password = '{1}'", loginn, password);
+
+
+            //liczba kolumn
+            SqlDataReader reader2 = login.ExecuteReader();
+            int numberOfColumns = reader2.FieldCount;
+
+            //nazwy kolumn
+            DataTable schemaTable = reader2.GetSchemaTable();
+            string[] columnNames = new string[numberOfColumns];
+            for (int i = 0; i < numberOfColumns; i++)
+            {
+                columnNames[i] = reader2.GetName(i);
+            }
+
+
+
+
+            if (reader2.HasRows)
+            {
+                while (reader2.Read())
+                {
+                    for (int i = 0; i < numberOfColumns; i++)
+                    {
+                        Console.Write(columnNames[i]);
+                        Console.Write(": ");
+                        Console.WriteLine(reader2[i]);
+                    }
+                    Console.WriteLine();
+
+                }
+            }
             conn.Close();
+            //end of select
         }
 
         static void search()
@@ -70,15 +133,20 @@ namespace ConsoleApp9
 
         static void addListing()
         {
-            Console.WriteLine("newListing");
+            string Name, photoPath;
+            int price;
+            Console.WriteLine("New Listing");
+            Console.Write("Name:");
+            Name = Console.ReadLine();
+
         }
 
         static int cantThinkOfANameRn(string[] text)
         {
-            
-                
-                int pos = 0;
-                int txtsum;
+
+
+            int pos = 0;
+            int txtsum;
             while (true)
             {
                 Console.Clear();
@@ -87,14 +155,14 @@ namespace ConsoleApp9
                 for (int i = 0; i < text.Length; i++)
                 {
                     Console.Write(text[i]);
-                    Console.Write(" ");
+                    Console.Write("   ");
                 }
-                Console.WriteLine(pos);
+
                 for (int i = 0; i < pos; i++)
                 {
-                    spcnum += text[i].Length + 1;
+                    spcnum += text[i].Length + 3;
                 }
-                Console.WriteLine(spcnum);
+                Console.WriteLine();
 
                 for (int i = 0; i < spcnum; i++)
                 {
@@ -102,8 +170,10 @@ namespace ConsoleApp9
                 }
                 Console.WriteLine("^");
 
-                if (pos>=text.Length)
-                    pos = 0;
+                if (pos >= text.Length)
+                    pos--;
+                else if (pos < 0)
+                    pos++;
                 else
                     switch (Console.ReadKey().Key)
                     {
@@ -157,12 +227,12 @@ namespace ConsoleApp9
                         else
                             register();
                         isLoggedIn = true;
-                       
+
 
                     }
                     break;
             }
-            
+
 
 
         }
