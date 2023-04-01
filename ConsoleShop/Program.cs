@@ -1,5 +1,7 @@
 ﻿using System.Data;
 using System.Data.SqlClient;
+using Spectre.Console;
+
 
 namespace ConsoleShop
 {
@@ -200,37 +202,20 @@ namespace ConsoleShop
             int userid;
             string[] myAcc = new string[] { "Login", "Register" };
             string[] hub = new string[] { "Search", "My account", "Add listing" };
-            switch (cantThinkOfANameRn(hub))
-            {
-                case 0:
-                    search();
-                    break;
-
-                case 1:
-                    if (cantThinkOfANameRn(myAcc) == 0)
-                        login();
-                    else
-                        register();
-                    isLoggedIn = true;
-                    break;
-
-                case 2:
-                    if (isLoggedIn)
-                        addListing();
-                    else
-                    {
-                        Console.WriteLine("You need to create a new account first or login");
+            
 
 
-                        if (cantThinkOfANameRn(myAcc) == 0)
-                            login();
-                        else
-                            register();
-                        isLoggedIn = true;
+            var table = new Table()
+            .BorderColor(Color.Yellow)
+            .Border(TableBorder.Double)
+            .AddColumn(new TableColumn("Name").Centered())
+            .AddColumn(new TableColumn("Age").Centered());
+                
+            table.AddRow("John", "25");
+            table.AddRow("Jane", "30");
+    
+            AnsiConsole.Render(table);
 
-
-                    }
-                    break;
             }
 
 
